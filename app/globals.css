@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0A0A0A;
+  --background-subtle: #111111;
+  --foreground: #FFFFFF;
+  --muted: #A1A1AA; /* zinc-400 */
+  --border: #262626; /* neutral-800 */
+  --accent-subtle: rgba(249, 115, 22, 0.15);
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    "Inter",
+    "Geist",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  @apply antialiased;
+}
