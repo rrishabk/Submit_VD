@@ -35,3 +35,5 @@ next-env.d.ts
 # seeded mock data — regenerate with `npm run seed`
 /public/visits.json
 /public/monitoring-events.json
+
+.vercel
