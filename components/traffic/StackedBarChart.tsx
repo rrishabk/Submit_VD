@@ -79,6 +79,9 @@ export function StackedBarChart({
   isEmpty,
   data,
 }: StackedBarChartProps) {
+  console.log("Chart data length:", data.length);
+  console.log("First row:", data[0]);
+
   const [activeBots, setActiveBots] = React.useState<Record<BotName, boolean>>(() => {
     const acc: Partial<Record<BotName, boolean>> = {};
     for (const b of BOT_NAMES) acc[b] = true;
@@ -137,7 +140,7 @@ export function StackedBarChart({
       </div>
 
       {/* Chart Body */}
-      <div className="relative min-h-[400px] w-full flex-1 max-h-[600px] z-10">
+      <div className="relative h-[400px] w-full flex-1 z-10">
         {isLoading ? (
           <Skeleton className="absolute inset-0 bg-white/5" />
         ) : isEmpty ? (
@@ -149,50 +152,62 @@ export function StackedBarChart({
             <p className="text-zinc-500">All bots hidden. Click a legend item to show data.</p>
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-            >
-              <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#262626" />
-              <XAxis
-                dataKey="date"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 12, fill: "#737373" }}
-                dy={10}
-                tickFormatter={(val) => {
-                  const d = new Date(val);
-                  if (isNaN(d.getTime())) return val;
-                  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
-                }}
-                minTickGap={30}
-              />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 12, fill: "#737373" }}
-                width={60}
-                dx={-10}
-                tickFormatter={(val) => val.toLocaleString()}
-              />
-              <Tooltip
-                content={(props) => <CustomTooltip {...props} />}
-                cursor={{ fill: "rgba(255, 255, 255, 0.04)" }}
-              />
-              {sortedBots.map((bot) => (
-                activeBots[bot] && (
-                  <Bar
-                    key={bot}
-                    dataKey={bot}
-                    stackId="a"
-                    fill={BOT_COLORS[bot]}
-                    isAnimationActive={false} // <150ms legend toggle requirement
-                  />
-                )
-              ))}
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="relative w-full h-[400px]">
+            <div className="absolute top-0 left-0 z-50 bg-black/80 text-red-500 p-4 rounded font-mono text-xs border border-red-500/30">
+              <div>Rows: {data.length}</div>
+              <div>First GPTBot: {String(data[0]?.GPTBot)}</div>
+              <div>First Date: {String(data[0]?.date)}</div>
+              <div>First Total: {String(data[0]?.total)}</div>
+              <div>Sorted Bots: {sortedBots.join(", ")}</div>
+              <div>Active Bots: {JSON.stringify(activeBots)}</div>
+            </div>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={data}
+                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+              >
+                {[
+                  <CartesianGrid key="grid" strokeDasharray="4 4" vertical={false} stroke="#262626" />,
+                  <XAxis
+                    key="xaxis"
+                    dataKey="date"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: "#737373" }}
+                    dy={10}
+                    tickFormatter={(val) => {
+                      const d = new Date(val);
+                      if (isNaN(d.getTime())) return val;
+                      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+                    }}
+                    minTickGap={30}
+                  />,
+                  <YAxis
+                    key="yaxis"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: "#737373" }}
+                    width={60}
+                    dx={-10}
+                    tickFormatter={(val) => val.toLocaleString()}
+                  />,
+                  <Tooltip
+                    key="tooltip"
+                    content={(props) => <CustomTooltip {...props} />}
+                    cursor={{ fill: "rgba(255, 255, 255, 0.04)" }}
+                  />,
+                  ...sortedBots.filter(bot => activeBots[bot]).map((bot) => (
+                    <Bar
+                      key={bot}
+                      dataKey={bot}
+                      stackId="a"
+                      fill={BOT_COLORS[bot]}
+                    />
+                  ))
+                ]}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         )}
       </div>
     </Card>
