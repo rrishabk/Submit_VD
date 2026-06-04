@@ -1,4 +1,5 @@
 {
+  "name": "submit-vd",
   "buildCommand": "npm run seed && npm run build",
   "installCommand": "npm install",
   "framework": "nextjs"
