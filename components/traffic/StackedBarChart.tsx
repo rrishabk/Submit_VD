@@ -153,14 +153,7 @@ export function StackedBarChart({
           </div>
         ) : (
           <div className="relative w-full h-[400px]">
-            <div className="absolute top-0 left-0 z-50 bg-black/80 text-red-500 p-4 rounded font-mono text-xs border border-red-500/30">
-              <div>Rows: {data.length}</div>
-              <div>First GPTBot: {String(data[0]?.GPTBot)}</div>
-              <div>First Date: {String(data[0]?.date)}</div>
-              <div>First Total: {String(data[0]?.total)}</div>
-              <div>Sorted Bots: {sortedBots.join(", ")}</div>
-              <div>Active Bots: {JSON.stringify(activeBots)}</div>
-            </div>
+
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={data}
